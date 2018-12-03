@@ -1,12 +1,4 @@
 <?php
-
-class Account {
-	//sets account
-	public $acc_email;
-	public $acc_fname;
-	public $acc_lname;
-}
-
 function connect() {
 	$servername = "localhost";
 	$username = "root";
@@ -24,6 +16,18 @@ function connect() {
 	return $connection;
 }
 
+function filterString($str) {
+	//sanitize string
+	$str = filter_var(trim($str), FILTER_SANITIZE_STRING);
+	if (!empty($str)) {
+		return $str;
+	}
+	else {
+		return false;
+	}
+}
+
+/* old test code
 function db_insert() {
 	$connection = connect();
 	//Query and check if these have been initialized already
@@ -125,5 +129,5 @@ function db_delete() {
 		$connection->close();
 		return true;
 	}
-}
+}*/
 ?>

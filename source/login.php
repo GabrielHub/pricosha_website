@@ -35,7 +35,7 @@
 	    //credential validation
 	    if(empty($username_err) && empty($password_err)) {
 	    	//prepare select statement, check for email before looking for password
-	    	$query = "SELECT email, password FROM person WHERE email=?";
+	    	$query = "SELECT email, password, fname, lname FROM person WHERE email=?";
 
 	    	if ($statement = $connection->prepare($query)) {
 	    		//bind variables to prepared statement as param
@@ -52,7 +52,7 @@
 	    			//if email exists, check password
 	    			if ($statement->num_rows == 1) {
 	    				//bind result var
-	    				$statement->bind_result($email, $hashed_password);
+	    				$statement->bind_result($email, $hashed_password, $fname, $lname);
 
 	    				if ($statement->fetch()) {
 	    					//if password is correct
@@ -63,6 +63,8 @@
 	    						//store data as session var
 	    						$_SESSION["loggedin"] = true;
                             	$_SESSION["email"] = $email;
+                            	$_SESSION["fname"] = $fname;
+                            	$_SESSION["lname"] = $lname;
 
                             	//redirect user to main page
                             	header("location: main.php");
@@ -107,8 +109,6 @@
 		$_SESSION[$this->GetLoginSessionVar()] = $email;
 		echo "<script>window.location.href = 'main.php';</script>";
 	}*/
-
-	$connection->close();
 ?>
 <!DOCTYPE html>
 <html lang = "en">
@@ -141,7 +141,7 @@
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" value="Login">
             </div>
-            <p>Don't have an account? <a href="register.php">Sign up now</a>.</p>
+            <p>Don't have an account? <a href="index.php">Sign up now</a>.</p>
         </form>
 	</body>
 </html>

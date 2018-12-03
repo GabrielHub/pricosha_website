@@ -1,8 +1,10 @@
 <?php
 /*
-	Tutorial used to create login page from https://www.tutorialrepublic.com/php-tutorial/php-mysql-login-system.php
+	Tutorial used to create registration and login page from https://www.tutorialrepublic.com/php-tutorial/php-mysql-login-system.php
 */
+//Registration
 
+	//Connection
 include("functions.php");
 $connection = connect(); //Start Connection
 
@@ -72,8 +74,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
+    //validate first name
+    if (empty(trim($_POST["fname"]))) {
+        $fname_err = "Please enter a first name.";     
+    } 
+    else {
+        $fname = trim($_POST["fname"]);
+    }
+
+    //validate first name
+    if (empty(trim($_POST["lname"]))) {
+        $lname_err = "Please enter a last name.";     
+    } 
+    else {
+        $lname = trim($_POST["lname"]);
+    }
+
     //Check input errors before db insertion
-    if (empty($username_err) && empty($password_err) && empty($confirm_password_err)) {
+    if (empty($username_err) && empty($password_err) && empty($confirm_password_err) && empty($fname_err) && empty($lname_err)) {
     	//prepare insert statement
     	$query = "INSERT INTO Person VALUES (?, ?, ?, ?)";
 

@@ -1,3 +1,4 @@
+
 <html>
 	<head>
 		<link rel="stylesheet" href="style.css">
@@ -10,9 +11,5 @@
 	<p>Press delete to delete these accounts.</p>
 	<button onclick = "window.location.href='insert.php'">Insert Initial Testing Accounts</button>
 	<button onclick = "window.location.href='delete.php'">Delete Testing Accounts</button>
-
-	<?php 
-		echo 'Hello '.($_COOKIE['email'] != '' ? $_COOKIE['email'] : 'Guest');
-	 ?>
 </body>
 </html>

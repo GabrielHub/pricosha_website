@@ -24,6 +24,11 @@ function connect() {
 	return $connection;
 }
 
+function saveEmail($email) {
+	//set a cookie that saves email for 24 hours
+	setcookie("email", $email, time() + 3600 * 24);
+}
+
 function db_insert() {
 	$connection = connect();
 	//Query and check if these have been initialized already

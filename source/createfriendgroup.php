@@ -87,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			//Execute prep statement
 			if ($statement->execute()) {
 				//Update BelongTo table with owner
-				echo addToFriendGroup($email, $email, $fgname, $connection);
+				$err_result = addToFriendGroup($email, $email, $fgname, $connection);
 
 				//return to group page page
 				header("location: friendgroup.php"); 
@@ -132,7 +132,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="submit" class="btn btn-primary" value="Submit">
                 <input type="reset" class="btn btn-default" value="Reset">
             </div>
-            <p>Changed your mind? <a href="login.php">Return to your profile here</a>.</p>
+            <p>Changed your mind? <a href="friendgroup.php">Return to your <b>Groups</b> here</a>.</p>
         </form>   
     </div>
 </body>

@@ -21,28 +21,37 @@ echo $_SESSION["fname"] . ' ' . $_SESSION["lname"];
 	<ul>
 		<li><a class="active" href= "main.php">Homepage</a></li>
 		<li><a href="createfriendgroup.php">Create New Group</a></li>
-		<li><a href="friendgroupfunctions.php">View Group Posts</a></li>
+		<li><a href="addfriend.php">Friends</a></li>
 	</ul>
 
 	<h1>Friend Groups</h1>
 
 	<div class = "columns">
+		<p>
+			Click <b>Create New Group</b> to create a new Group! <br>
+			Click <b>Friends</b> to add friends to groups! <br>
+		</p>
 		<p>FriendGroups you Own:</p>
+
 		<?php
 		include("functions.php");
 		$connection = connect();
+
 		//Find friendgroups you own and display them as links to their content pages
 		$friendgroups = getOwnedFriendGroup($_SESSION["email"], $connection);
-		if ($friendgroups == 0) {
+		if (empty($friendgroups)) {
 			echo "You own no friendgroups!";
 		}
-		for ($i = 0; $i < count($friendgroups); $i++) {
-			echo $friendgroups[$i];
-			echo "<br>";
+
+		//Loop through associative array, and print only the fgnames
+		foreach($friendgroups as $v) {
+			echo $v['fg_name'], "<br>"; 
 		}
 
 		$connection->close();
 		?>
+		<br>
+
 	</div>
 	<p>
 		<br><br>

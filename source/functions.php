@@ -32,16 +32,20 @@ function getOwnedFriendGroup($email, $connection) {
 	$array = array();
 	$emails;
 	//Prepare statement
-	if ($statement = $connection->prepare("SELECT owner_email, fg_name FROM friendgroup WHERE owner_email = ?")) {
+	if ($statement = $connection->prepare("SELECT fg_name, description FROM friendgroup WHERE owner_email = ?")) {
 		$statement->bind_param("s", $param_email);
 
 		$param_email = $email;
 
 		if ($statement->execute()) {
 			$statement->store_result();
-			$statement->bind_result($emails, $fgnames);
+			$statement->bind_result($fgnames, $descriptions);
 			while ($statement->fetch()) {
-				$array[] = ($fgnames);
+				$array[] = array(
+					"fg_name" => $fgnames,
+					"description" => $descriptions
+				);
+				//echo $fgnames, $descriptions;
 			}
 		}
 		else {
@@ -50,18 +54,15 @@ function getOwnedFriendGroup($email, $connection) {
 	}
 	$statement->close();
 
-	//Returns 0 if there are no friend groups, else returns an array with names of friendgroups
-	if (empty($array)) {
-		return 0;
-	}
-	else {
-		return $array;
-	}
+	//Returns empty if there are no friend groups, else returns an array with names of friendgroups
+	return $array;
 }
 
+//Adds a person to belong
 function addToFriendGroup($email, $owner_email, $fgname, $connection) {
 	$email_err = ""; //If person is already in the group
 	$fgname_err = ""; //If you don't have a group with the name 
+	$email_result = "";
 
 	//Prepare statement to check for duplicate member in the group
 	if ($statement = $connection->prepare("SELECT email FROM belong WHERE owner_email = ? AND fg_name = ?")) {
@@ -76,8 +77,10 @@ function addToFriendGroup($email, $owner_email, $fgname, $connection) {
 		if ($statement->execute()) {
 			//store result
 			$statement->store_result();
+			$statement->bind_result($email_result);
+    		$statement->fetch();
 
-			if ($statement->num_rows == 1) {
+			if ($statement->num_rows == 1 && $email_result == $email) {
 				$email_err = "This member is already in the group";
 			}
 		}
@@ -102,9 +105,12 @@ function addToFriendGroup($email, $owner_email, $fgname, $connection) {
 			//store result
 			$statement->store_result();
 
-			if ($statement->num_rows != 1) {
-				$fgname_err = "You don't own a friend group named: $fgname";
+			if ($statement->num_rows == 0) {
+				$fgname_err = "You don't own a friend group named: $fgname , $owner_email";
 			}
+		}
+		else {
+			return "Could not execute fg existence check";
 		}
 	}
 	else {
@@ -126,17 +132,45 @@ function addToFriendGroup($email, $owner_email, $fgname, $connection) {
 
 			//Execute
 			if ($statement->execute()) {
-				//return "Successful Insertion!";
+				return "";
 			}
-			/*else {
+			else {
 				return "Could not insert into belong";
-			}*/
+			}
 		}
 		$statement->close();
 	}
 	else {
 		return "$email_err | $fgname_err"; //output errors if they occur
 	}
+}
+
+function createFriendGroupTable($owner_email, $connection) {
+	//get associative array of fgnames and descriptions from groups you own
+	$result = getOwnedFriendGroup($owner_email, $connection);
+
+	echo "
+	<table>
+	<tr>
+	<th>Name</th>
+	<th>Description</th>
+	<th>Add Friend</th>
+	</tr>";
+
+	foreach ($result as $v) {
+	echo "<tr>";
+	echo "<td>" . $v['fg_name'] . "</td>";
+	echo "<td>" . $v['description'] . "</td>";
+	echo "<td><a href=\"addfriendtempsession.php?fgname=" . $v['fg_name'] . "\" class=\"btn btn-primary\">ADD</a></td>";
+	/*echo "<td><form enctype=\"multipart/formdata\" class= \"btn btn-primary \" action=\"addfriend1.php\" method=\"post\">
+	<input type=\"hidden\" name=\"fgname\"
+	value=\"" . $v['fg_name'] . "\">
+	<input type=\"submit\" name=\"whatever\" value=\"ADD\" id=\"hyperlink-style-button\"/>
+	</form></td>
+	";*/
+	echo "</tr>";
+	}
+	echo "</table>";
 }
 
 /* old test code, learning basic prepared statements and insertions

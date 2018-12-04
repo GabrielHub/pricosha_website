@@ -9,28 +9,45 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 include "functions.php";
 $connection = connect();
 
-//for Share inserts
-$appendSQL = "";
+$groups = array(); //keep track of which groups were checked
+$ispublic = 0; //default public to false
+$item_name = ""; //these are empty if there are no item name/file path posted
+$file_path = "";
+$timestamp = date('Y-m-d G:i:s'); //Timestamp data for mysql
 
-foreach($_POST["options"] as $index => $option) {
-  if ($appendSQL == "") $appendSQL = "AND Stato IN ("; //if it's the first detected option, add the IN clause to the string
-  $appendSQL .= $option.",";
+//ERROR HANDLING v
+
+//check groups
+if (isset($_POST['options']) && is_array($_POST['options'])) {
+	$groups = $_POST['options']; //if groups were selected, else groups is an empty array
+}
+else {
+	echo "error with checkboxes";
 }
 
-//trim the trailing comma and add the closing bracket of the IN clause instead
-if ($appendSQL != "") 
-{
-  $appendSQL = rtrim($appendSQL, ","); 
-  $appendSQL .= ")";
+//check if public
+if (isset($_POST['public'])) {
+	$ispublic = 1;
 }
 
-//
+//check for empty file path and item name
+if (isset($_POST['item_name'])) {
+	$item_name = $_POST['item_name'];
+}
+if (isset($_POST['file_path'])) {
+	$file_path = $_POST['file_path'];
+}
+
 
 //Form handling
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-	echo trim($_POST["item_name"]), trim($_POST["file_path"], $appendSQL);
+	//function to add
+	$return = postContentItem($_SESSION['email'], $timestamp, $file_path, $item_name, $ispublic, $connection, $groups);
 }
 
+
+
+$connection->close();
 ?>
 
 <html>
@@ -46,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		<li><a href="post.php">Post</a></li>
 	</ul>
 
-	<h1>Posted!</h1>
+	<<?php echo "<h1>" . $return . "</h1>"; ?>
 	<br>
 	<p>Made a mistake? Click <a href="post.php"><b>HERE</b></a> to go back</p>
 </body>

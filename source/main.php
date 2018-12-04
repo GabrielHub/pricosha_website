@@ -31,19 +31,32 @@ echo $_SESSION["fname"] . ' ' . $_SESSION["lname"];
 
 	</ul>
 
-	<h1>MySpace 2.0</h1>
+	<h1>MySpace 2.0, but like Twitter</h1>
 
 	<div class = "columns">
 		<p>Features:</p>
 		<p>Click on <b>Manage Groups</b> for adding Friends and Group management!</p>
 		<p>Click on <b>Post</b> to post something!</p> <br>
-		<label>Recent Posts (last 24 hours):</label>
+		<h2>Feed:</h2>
 		<br>
 
 		<?php
-		//View shared content items and info about them
+		include "functions.php";
+		$connection = connect();
 
+		//display shared content items and info about them
+		$posts = getContentItemData($_SESSION['email'], $connection); //store results in an array to use
 
+		if (empty($posts)) {
+			echo "No posts yet!";
+		}
+		else {
+			foreach ($posts as $v) {
+				echo "<div class = 'column'><h2>" . $v['item_name'] . "</h2><p>" . $v['file_path'] . " </p> <h3>" . $v['item_id'] . ".  <b>" . $v['email_post'] . "</b> , " . $v['post_time'] . "</h3></div>";
+			}
+		}
+
+		$connection->close();
 		?>
 	</div>
 

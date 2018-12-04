@@ -31,6 +31,16 @@ th, td {
 
 tr:hover {background-color: #f5f5f5;} 
 
+.contentitem {
+    float:left;
+    height:250px;
+    width:250px;
+    margin-right:5px;
+
+    padding: 5px;
+    border: 1px;
+}
+
 /* way to submit post data as a button, help from https://stackoverflow.com/questions/4854754/how-to-set-a-session-variable-when-clicking-a-a-link */
 #hyperlink-style-button{
       background:none;
@@ -49,52 +59,6 @@ tr:hover {background-color: #f5f5f5;}
     }
 /*Checkbox CSS taken from https://codepen.io/zFunx/pen/dWbevd*/
 
-input[type=checkbox] + label {
-  display: block;
-  margin: 0.2em;
-  cursor: pointer;
-  padding: 0.2em;
-}
-
-input[type=checkbox] {
-  display: none;
-}
-
-input[type=checkbox] + label:before {
-  content: "\2714";
-  border: 0.1em solid #000;
-  border-radius: 0.2em;
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  padding-left: 0.2em;
-  padding-bottom: 0.3em;
-  margin-right: 0.2em;
-  vertical-align: bottom;
-  color: transparent;
-  transition: .2s;
-}
-
-input[type=checkbox] + label:active:before {
-  transform: scale(0);
-}
-
-input[type=checkbox]:checked + label:before {
-  background-color: MediumSeaGreen;
-  border-color: MediumSeaGreen;
-  color: #fff;
-}
-
-input[type=checkbox]:disabled + label:before {
-  transform: scale(1);
-  border-color: #aaa;
-}
-
-input[type=checkbox]:checked:disabled + label:before {
-  transform: scale(1);
-  background-color: #bfb;
-  border-color: #bfb;
-}
 
 /* Base CSS from High School Website Project Here */
 [draggable]
@@ -300,6 +264,16 @@ h2
 	font-size: 20px;
 	line-height: 40px;
 	font-family: 'Orienta', sans-serif;
+}
+
+h2
+{
+    margin: 1em 0 0.5em 0;
+  color: #343434;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 25px;
+  font-family: 'Orienta', sans-serif;
 }
 
 .button

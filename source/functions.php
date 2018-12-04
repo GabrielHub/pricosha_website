@@ -89,6 +89,67 @@ function getOwnedFriendGroup($email, $connection) {
 	return $array;
 }
 
+//function to post contentitems
+function postContentItem($email, $post_time, $file_path, $item_name, $is_pub, $connection, $groups) {
+	//prepare insert statement, for content item
+	$query = "INSERT INTO contentitem (email_post, post_time, file_path, item_name, is_pub) VALUES (?, ?, ?, ?, ?)";
+
+	if ($statement = $connection->prepare($query)) {
+		//bind variables to the prepared statement as parameters
+		$statement->bind_param("ssssi", $param_email, $param_time, $param_file, $param_item, $param_pub);
+
+		//set parameters
+		$param_email = $email;
+		$param_time = $post_time;
+		$param_file = $file_path;
+		$param_item = $item_name;
+		$param_pub = $is_pub;
+
+		//attempt execution
+		if ($statement->execute()) {
+			if ($is_pub == 0) {
+				$id = $statement->insert_id;
+				share($email, $groups, $id, $connection);
+			}
+			return "POSTED:  $email $post_time $file_path $item_name $is_pub";
+		}
+		else {
+			return "Failed to post items";
+		}
+	}
+	$statement->close();
+}
+
+//function to share to friendgroups if public is 0
+function share($owner_email, $groups, $id, $connection) {
+	$query = "INSERT INTO share VALUES (?, ?, ?)";
+
+	//prepare insert statement
+	if ($statement = $connection->prepare($query)) {
+		//bind variables to the prepared statement as param
+		$statement->bind_param("ssi", $param_email, $param_fg, $param_id);
+
+		//set parameters
+		$param_email = $owner_email;
+		$param_id = $id;
+
+		//loop over every friendgroup they have selected
+		foreach($groups as $v) {
+			//bind fgname
+			$param_fg = $v;
+
+			//attempt execution
+			if ($statement->execute()) {
+				echo "Shared to  $v, ";
+			}
+			else {
+				echo "Failed to share to  $v, ";
+			}
+		}
+	}
+	$statement->close();
+}
+
 //Adds a person to belong
 function addToFriendGroup($email, $owner_email, $fgname, $connection) {
 	$email_err = ""; //If person is already in the group
@@ -202,6 +263,59 @@ function createFriendGroupTable($owner_email, $connection) {
 	echo "</tr>";
 	}
 	echo "</table>";
+}
+
+//retrieve all content items with permission to view and store in an associative array
+function getContentItemData($email, $connection) {
+	//variables to bind to
+	$item_id;
+	$email_post;
+	$post_time;
+	$item_name;
+	$file_path;
+
+	//Result array
+	$result = array();
+
+	//query gets all public and friend group posts, and orders them by time posted
+	$query = "SELECT item_id, email_post, post_time, item_name, file_path FROM contentitem WHERE is_pub = 1 
+UNION
+SELECT item_id, email_post, post_time, item_name, file_path FROM ContentItem WHERE item_id IN (SELECT item_id FROM share WHERE fg_name IN (SELECT fg_name FROM belong WHERE email = ?)) ORDER BY post_time DESC";
+
+	//prepare select statement, and retrieve all info about content. Make sure you belong to these fgs
+	if ($statement = $connection->prepare($query)) {
+		//bind variables to prepared state
+		$statement->bind_param("s", $param_email);
+
+		//set Email
+		$param_email = $email;
+
+		//attempt an execution :)
+		if ($statement->execute()) {
+			//store result
+			$statement->store_result();
+
+			//bind results
+			$statement->bind_result($item_id, $email_post, $post_time, $item_name, $file_path);
+
+			//add results to an array
+			while ($statement->fetch()) {
+			$result[] = array(
+				"item_id" => $item_id,
+				"email_post" => $email_post,
+				"post_time" => $post_time,
+				"item_name" => $item_name,
+				"file_path" => $file_path
+				);
+			}	
+		}
+		else {
+			echo "Could not fetch content items.";
+		}
+	}
+	$statement->close();
+
+	return $result;
 }
 
 /* old test code, learning basic prepared statements and insertions

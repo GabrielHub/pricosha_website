@@ -27,10 +27,41 @@ function filterString($str) {
 	}
 }
 
+//For getting all friendgroups
+function getFriendGroup($email, $connection){
+	$result = array();
+	$fgnames; //Var to store temp results
+	$oemails;
+
+	//prepare statement
+	if ($statement = $connection->prepare("SELECT owner_email, fg_name FROM belong WHERE email = ?")) {
+		$statement->bind_param("s", $param_email);
+
+		$param_email = $email;
+
+		if ($statement->execute()) {
+			$statement->store_result();
+			$statement->bind_result($oemails, $fgnames);
+			while ($statement->fetch()) {
+				$result[] = array(
+					"owner_email" => $oemails,
+					"fg_name" => $fgnames,
+				);
+			}
+		}
+		else {
+			echo "Couldn't fetch friendgroups";
+		}
+	}
+	$statement->close();
+	//Returns empty if there are no friend groups, else returns an array with names of friendgroups
+	return $result;
+}
+
 //For getting friendgroups you own
 function getOwnedFriendGroup($email, $connection) {
 	$array = array();
-	$emails;
+	$emails; //Store variable
 	//Prepare statement
 	if ($statement = $connection->prepare("SELECT fg_name, description FROM friendgroup WHERE owner_email = ?")) {
 		$statement->bind_param("s", $param_email);

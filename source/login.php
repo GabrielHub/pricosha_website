@@ -2,12 +2,6 @@
 //init session
 session_start();
 
-//checking if logged in
-if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
-    header("location: login.php");
-    exit;
-}
-
 include "functions.php";
 $connection = connect();
 

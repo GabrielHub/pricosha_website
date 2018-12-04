@@ -8,10 +8,9 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     exit;
 }
 
-
-
 echo $_SESSION["fname"] . ' ' . $_SESSION["lname"];
 ?>
+
 <html>
 	<head>
 		<link rel="stylesheet" href="style.css">
@@ -21,15 +20,29 @@ echo $_SESSION["fname"] . ' ' . $_SESSION["lname"];
 <body>
 	<ul>
 		<li><a class="active" href= "main.php">Homepage</a></li>
-		<li><a href="friendgroup.php">Groups</a></li>
+		<li><a href="createfriendgroup.php">Create New Group</a></li>
+		<li><a href="friendgroupfunctions.php">View Group Posts</a></li>
 	</ul>
 
-	<h1>MySpace 2.0</h1>
+	<h1>Friend Groups</h1>
 
 	<div class = "columns">
-		<p>Current features:</p>
-		<p>Click on Groups to view Friend Group features!</p> <br>
-		<label>Recent Public Posts:</label>
+		<p>FriendGroups you Own:</p>
+		<?php
+		include("functions.php");
+		$connection = connect();
+		//Find friendgroups you own and display them as links to their content pages
+		$friendgroups = getOwnedFriendGroup($_SESSION["email"], $connection);
+		if ($friendgroups == 0) {
+			echo "You own no friendgroups!";
+		}
+		for ($i = 0; $i < count($friendgroups); $i++) {
+			echo $friendgroups[$i];
+			echo "<br>";
+		}
+
+		$connection->close();
+		?>
 	</div>
 	<p>
 		<br><br>

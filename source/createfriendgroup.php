@@ -17,7 +17,7 @@ $fgname = $description = "";
 $fgname_err = $description_err = "";
 $email = $_SESSION["email"];
 
-//account name
+//Display account name at top of page
 echo $_SESSION["fname"] . ' ' . $_SESSION["lname"];
 
 //Process form data
@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 					$fgname_err = "You already have a friendgroup with this name!";
 				}
 				else {
-					$fgname = trim($_POST["fgname"]);
+					$fgname = trim($_POST["fgname"]); //Set fg name
 				}
 			}
 			else {
@@ -68,8 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $description_err = "Description must be less than 1000 characters!";
     }
 	else {
-		$description = filterString($_POST["description"]);
-		//echo $description;
+		$description = filterString($_POST["description"]); //set description, filter string is custom function
 	}
 
 	//Check errors before insertion
@@ -87,8 +86,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 			//Execute prep statement
 			if ($statement->execute()) {
-				//return to main page
-				header("location: main.php");
+				//Update BelongTo table with owner
+				echo addToFriendGroup($email, $email, $fgname, $connection);
+
+				//return to group page page
+				header("location: friendgroup.php"); 
+				//might change it to individual group page later
 			}
 			else {
 				echo "Something went wrong, please try again later.";
@@ -112,7 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </style>
 </head>
 <body>
-    <div class="wrapper">
+	<div class = "wrapper">
         <p>Choose a unique name for your friend group and write a description!</p>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
             <div class="form-group <?php echo (!empty($fgname_err)) ? 'has-error' : ''; ?>">
@@ -130,7 +133,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="reset" class="btn btn-default" value="Reset">
             </div>
             <p>Changed your mind? <a href="login.php">Return to your profile here</a>.</p>
-        </form>
-    </div>    
+        </form>   
+    </div>
 </body>
 </html>

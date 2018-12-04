@@ -124,6 +124,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!DOCTYPE html>
 <html lang="en">
+<meta name = "viewport" content = "width=device-width, initial-scale=1.0, user-scalable=no">
 <head>
     <meta charset="UTF-8">
     <h1>PriCoSha by Gabriel Ong</h1>
@@ -140,27 +141,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
             <div class="form-group <?php echo (!empty($email_err)) ? 'has-error' : ''; ?>">
                 <label>Email</label>
-                <input type="text" name="email" class="form-control" value="<?php echo $email; ?>">
+                <input type="text" name="email" value="<?php echo $email; ?>">
                 <span class="help-block"><?php echo $email_err; ?></span>
             </div>    
             <div class="form-group <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
                 <label>Password</label>
-                <input type="password" name="password" class="form-control" value="<?php echo $password; ?>">
+                <input type="password" name="password" value="<?php echo $password; ?>">
                 <span class="help-block"><?php echo $password_err; ?></span>
             </div>
             <div class="form-group <?php echo (!empty($confirm_password_err)) ? 'has-error' : ''; ?>">
                 <label>Confirm Password</label>
-                <input type="password" name="confirm_password" class="form-control" value="<?php echo $confirm_password; ?>">
+                <input type="password" name="confirm_password" value="<?php echo $confirm_password; ?>">
                 <span class="help-block"><?php echo $confirm_password_err; ?></span>
             </div>
             <div class="form-group <?php echo (!empty($fname_err)) ? 'has-error' : ''; ?>">
                 <label>First Name</label>
-                <input type="fname" name="fname" class="form-control" value="<?php echo $fname; ?>">
+                <input type="fname" name="fname" value="<?php echo $fname; ?>">
                 <span class="help-block"><?php echo $fname_err; ?></span>
             </div>
             <div class="form-group <?php echo (!empty($lname_err)) ? 'has-error' : ''; ?>">
                 <label>Last Name</label>
-                <input type="lname" name="lname" class="form-control" value="<?php echo $lname; ?>">
+                <input type="lname" name="lname" value="<?php echo $lname; ?>">
                 <span class="help-block"><?php echo $lname_err; ?></span>
             </div>
             <div class="form-group">

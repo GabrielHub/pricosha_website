@@ -1,6 +1,22 @@
 <style>
-@import url(//codepen.io/chrisdothtml/pen/ojLzJK.css);
 
+
+/* CSS created specifically for this project @import url(//codepen.io/chrisdothtml/pen/ojLzJK.css);*/
+.form-group {
+  margin-bottom: 15px;
+}
+label {
+    color: orange;
+}
+.wrapper {
+  margin: 20px auto;
+  width: 95%;
+  min-height: 31px;
+  padding: 15px;
+  position: relative;
+}
+
+/* Base CSS from High School Website Project Here */
 [draggable]
 {
     -moz-user-select: none;
@@ -27,6 +43,32 @@ body
     text-align: center;
     background: #2a2a2a;
 }
+
+/* The navbar (dropdown) menu, CSS from w3schools */
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+li a:hover {
+    background-color: #111;
+} 
 
 .columns
 {

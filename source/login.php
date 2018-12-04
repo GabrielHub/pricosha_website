@@ -112,6 +112,7 @@
 ?>
 <!DOCTYPE html>
 <html lang = "en">
+<meta name = "viewport" content = "width=device-width, initial-scale=1.0, user-scalable=no">
 	<head>
 		<link rel="stylesheet" href="style.css">
 		<meta charset="UTF-8">
@@ -129,7 +130,7 @@
 		<p>Project for Intro to Databases: Login Page</p>
 		<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
             <div class="form-group <?php echo (!empty($email_err)) ? 'has-error' : ''; ?>">
-                <label>email</label>
+                <label>Email</label>
                 <input type="text" name="email" class="form-control" value="<?php echo $email; ?>">
                 <span class="help-block"><?php echo $email_err; ?></span>
             </div>    

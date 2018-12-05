@@ -20,6 +20,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 		<li><a href="friendgroup.php">Manage Groups</a></li>
 		<li><a href="managetags.php">Manage Tags</a></li>
 		<li><a href="post.php">Post</a></li>
+		<li style = "float:right"><a href="logout.php" class='btn btn-primary'>Sign Out</a></li>
 	</ul>
 	<?php echo "<h1>" . $_SESSION["fname"] . ' ' . $_SESSION["lname"] . "</h1>" ?>
 	
@@ -60,11 +61,5 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 		$connection->close();
 		?>
 	</div>
-
-	</div>
-	<p>
-		<br><br>
-		<a href="logout.php" class="button" id="logout_button">Sign Out</a>
-	</p>
 </body>
 </html>

@@ -310,6 +310,7 @@ function getContentItemData($email, $connection) {
 	return $result;
 }
 
+//get readable name (string) from an email
 function getName($email, $connection) {
 	//variables to bind to
 	$fname;
@@ -342,6 +343,46 @@ function getName($email, $connection) {
 		}
 		else {
 			return "Could not retieve name from email";
+		}
+	}
+	$statement->close();
+
+	return $result;
+}
+
+//get person's email from first and last names
+function getEmail($fname, $lname, $connection) {
+	//variables to bind to
+	$email;
+
+	$result;
+
+	//query to get email from first and last name
+	$query = "SELECT email FROM person WHERE fname = ? AND lname = ?";
+
+	//prepare statement
+	if ($statement = $connection->prepare($query)) {
+		//bind variables to prepare
+		$statement->bind_param("ss", $param_fname, $param_lname);
+
+		//set parameters
+		$param_fname = $fname;
+		$param_lname = $lname;
+
+		//attempt an execution
+		if ($statement->execute()) {
+			//store result
+			$statement->store_result();
+			$statement->bind_result($email);
+			if ($statement->fetch()) {
+				$result = $email;
+			}
+			else {
+				return "Could not fetch email from names";
+			}
+		}
+		else {
+			return "could not query for email from name";
 		}
 	}
 	$statement->close();

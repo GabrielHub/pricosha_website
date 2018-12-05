@@ -28,10 +28,6 @@ $fname = $lname = "";
 $fname_err = $lname_err = "";
 $email = ""; //var to store future email of person to be added
 
-/*
-'SELECT * FROM Person WHERE (fname = %s AND lname = %s) AND Person.username NOT IN (SELECT email FROM Belong WHERE fg_name = %s)'
-*/
-
 //Form Data
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 

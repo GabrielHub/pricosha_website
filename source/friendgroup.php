@@ -21,7 +21,7 @@ echo $_SESSION["fname"] . ' ' . $_SESSION["lname"];
 	<ul>
 		<li><a class="active" href= "main.php">Homepage</a></li>
 		<li><a href="createfriendgroup.php">Create New Group</a></li>
-		<li><a href="addfriend.php">Friends</a></li>
+		<li><a href="addfriend.php">Add Friends</a></li>
 	</ul>
 
 	<h1>Friend Groups</h1>

@@ -10,8 +10,6 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 
 echo $_SESSION["fname"] . ' ' . $_SESSION["lname"];
 
-//$timestamp = date('Y-m-d G:i:s'); //Timestamp data for mysql
-
 //temporary tag session id
 $_SESSION['tag_item_id'] = $_GET['id'];
 

@@ -127,7 +127,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		}
 		$statement->close();
 	}
-	$connection->close();
+	
 }
 
 ?>
@@ -141,8 +141,57 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	<ul>
 		<li><a href= "main.php">Homepage</a></li>
 	</ul>
-	<h1>Who would you like to tag? (Enter their email)</h1>
+	<h1>Tag Post</h1>
 	<br>
+	<div class = "columns">
+	<p>
+		Enter an <b>Email</b> and click <b>Submit</b> to tag someone in this post!
+	</p>
+	<br>
+
+	<?php 
+	echo "<h2> Selected Post </h2>";
+	$post = singleContentInfo($_SESSION['tag_item_id'], $connection); // get an array with single post info
+
+	$public = "No";
+	foreach ($post as $v) {
+		//convert public to a string
+		if ($v['is_pub'] == 1) {
+			$public = "Yes";
+		}
+		$poster_name = getName($v['email_post'], $connection); //get a name for the poster
+		// print out extended information
+		echo "<div class = 'column'><h2>Title: " . $v['item_name'] . "</h2><p>Text: " . $v['file_path'] . " </p> <h3>Public: " . $public . "<br><br> <b>Poster: " . $v['email_post'] . ", " . $poster_name . "</b></h3><p> " . $v['post_time'] . "</p></div>";
+	}
+	
+
+	echo "<br><br><br> <label>People tagged in this post: </label> <br><br><br><br>";
+
+	$taginfo = tagContentInfo($_SESSION['tag_item_id'], $connection); //get an array with tag information
+
+	if (empty($taginfo)) {
+		echo "No one has been tagged in this post yet, fill out the form below to tag someone!";
+	}
+	else {
+		foreach ($taginfo as $v) {
+			//get name of tagged people
+			$tagged_name = getName($v['email_tagged'], $connection);
+			$tagger_name = getName($v['email_tagger'], $connection);
+			if ($tagged_name === $tagger_name) {
+				echo "<div class = column><p>" . $tagged_name . " tagged themself</p></div>";
+			}
+			else {
+				echo "<div class = column><p>" . $tagged_name . " was tagged by " . $tagger_name . "</p></div>";
+			}	
+		}
+	}
+
+	$connection->close();
+	 ?>
+	<br>
+	<br>
+	<br>
+	</div>
 	<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
 		<div class="form-group <?php echo (!empty($email_err)) ? 'has-error' : ''; ?>">
 		    <label>Email</label><br>

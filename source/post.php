@@ -38,27 +38,31 @@ echo $_SESSION["fname"] . ' ' . $_SESSION["lname"];
 		}
 		else {
 			//loop through array, and create checkboxes
-			echo "Groups: ";
+			echo "<h2><label>Groups: </label></h2><br> <div class='columns'>";
 			$i = 0;
 			foreach($fgs as $v) {
 				echo "<input type='checkbox' id='checkbox" . $i . "' name='options[]' value='" . $v['fg_name'] . "' checked='checked'><label for='checkbox" . $i . "'>" . $v['fg_name'] . "</label>";
 				$i++;
 			}
-			echo "";
+			echo "</div>";
 		}
 
 		$connection->close();
 		?>
 		<div>
-                <label>Item Name</label><br>
+                <label>Title of Post</label><br>
                 <input type="text" name="item_name">
         </div>
         <div>
-                <label>File Path</label><br>
+                <label>Text</label><br>
                 <input type="text" name="file_path">
         </div>
-        <input type = 'checkbox' id='checkbox' name = 'public' value = 'public' checked='checked'><label for='public'>Public</label>
+        <!--<input type = 'checkbox' id='checkbox' name = 'public' value = 'public' checked='checked'><label for='public'>Public</label>-->
 
+        <label class="container">Public Post
+        	<input type="checkbox" id='checkbox' name = 'public' value = 'public' checked="checked">
+ 			<span class="checkmark"></span>
+        </label>
         
 		<input type="submit" value="Submit" />
 	</form>

@@ -91,6 +91,13 @@ function getOwnedFriendGroup($email, $connection) {
 
 //function to post contentitems
 function postContentItem($email, $post_time, $file_path, $item_name, $is_pub, $connection, $groups) {
+	//check if file_path or item_name is too long
+	if (strlen($file_path) > 100) {
+		return "Text length must be under 100 characters!";
+	}
+	if (strlen($item_name) > 20) {
+		return "Title length must be under 20 characters!";
+	}
 	//prepare insert statement, for content item
 	$query = "INSERT INTO contentitem (email_post, post_time, file_path, item_name, is_pub) VALUES (?, ?, ?, ?, ?)";
 
@@ -100,8 +107,8 @@ function postContentItem($email, $post_time, $file_path, $item_name, $is_pub, $c
 
 		//set parameters
 		$param_email = $email;
-		$param_time = $post_time;
-		$param_file = $file_path;
+		$param_time = trim($post_time);
+		$param_file = trim($file_path);
 		$param_item = $item_name;
 		$param_pub = $is_pub;
 
@@ -492,6 +499,103 @@ function manageTag($email_tagged, $email_tagger, $item_id, $response, $connectio
 	else {
 		echo "Response button broke boi.";
 	}
+}
+
+function singleContentInfo($item_id, $connection) {
+	//variables to bind to
+	$is_pub;
+	$email_post;
+	$post_time;
+	$item_name;
+	$file_path;
+
+	$result = array(); //store in array
+
+	$query = "SELECT email_post, post_time, file_path, item_name, is_pub FROM contentitem WHERE item_id = ?";
+
+	//prepare statement to get info from contentitem
+	if ($statement = $connection->prepare($query)) {
+		//bind var to statement
+		$statement->bind_param("i", $param_id);
+
+		//set id 
+		$param_id = $item_id;
+
+		//attempt an execution :)
+		if ($statement->execute()) {
+			//store result
+			$statement->store_result();
+
+			//bind results
+			$statement->bind_result($email_post, $post_time, $file_path, $item_name, $is_pub);
+
+			//add results to an array
+			while ($statement->fetch()) {
+			$result[] = array(
+				"is_pub" => $is_pub,
+				"email_post" => $email_post,
+				"post_time" => $post_time,
+				"item_name" => $item_name,
+				"file_path" => $file_path
+				);
+			}	
+		}
+		else {
+			echo "Could not fetch content items.";
+		}
+	}
+	$statement->close();
+
+	return $result;
+}
+
+function tagContentInfo($item_id, $connection) {
+	//variables to bind to
+	$email_tagged;
+	$email_tagger;
+	$tagtime;
+
+	$result = array(); //store in array
+
+	//get info from tag and add it to array
+	$query = "SELECT email_tagged, email_tagger, tagtime FROM tag WHERE status = 'true' AND item_id = ?";
+
+	//prepare statement to get info from contentitem
+	if ($statement = $connection->prepare($query)) {
+		//bind var to statement
+		$statement->bind_param("i", $param_id);
+
+		//set id 
+		$param_id = $item_id;
+
+		//attempt an execution :)
+		if ($statement->execute()) {
+			//store result
+			$statement->store_result();
+
+			//bind results
+			$statement->bind_result($email_tagged, $email_tagger, $tagtime);
+
+			//add results to an array
+			while ($statement->fetch()) {
+			$result[] = array(
+				"email_tagged" => $email_tagged,
+				"email_tagger" => $email_tagger,
+				"tagtime" => $tagtime,
+				);
+			}	
+		}
+		else {
+			echo "Could not fetch tag items.";
+		}
+	}
+	else {
+		echo "BIG ERROR";
+	}
+	$statement->close();
+
+	return $result;
+
 }
 
 /* old test code, learning basic prepared statements and insertions

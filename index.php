@@ -127,7 +127,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <meta name = "viewport" content = "width=device-width, initial-scale=1.0, user-scalable=no">
 <head>
     <meta charset="UTF-8">
-    <h1>PriCoSha by Gabriel Ong</h1>
+    <h1>Tex: A Place To Share Your Thoughts</h1>
     <link rel="stylesheet" href="style.css">
     <style type="text/css">
         body{ font: 14px sans-serif; }

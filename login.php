@@ -121,7 +121,7 @@ else {
 	</head>
 	<body>
 
-		<h1>Private Content Share</h1>
+		<h1>Login</h1>
 		<p>Project for Intro to Databases: Login Page</p>
 		<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
             <div class="form-group <?php echo (!empty($email_err)) ? 'has-error' : ''; ?>">

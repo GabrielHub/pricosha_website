@@ -279,7 +279,7 @@ function getContentItemData($email, $connection) {
 	$result = array();
 
 	//query gets all public and friend group posts, and orders them by time posted
-	$query = "SELECT item_id, email_post, post_time, item_name, file_path FROM contentitem WHERE is_pub = 1 UNION SELECT item_id, email_post, post_time, item_name, file_path FROM contentitem WHERE item_id IN (SELECT item_id FROM share WHERE fg_name IN (SELECT fg_name FROM belong WHERE email = ?)) ORDER BY post_time DESC";
+	$query = "SELECT item_id, email_post, post_time, item_name, file_path FROM contentitem WHERE (is_pub = 1 AND (post_time >= NOW() - INTERVAL 1 DAY)) UNION SELECT item_id, email_post, post_time, item_name, file_path FROM contentitem WHERE (post_time >= NOW() - INTERVAL 1 DAY) AND item_id IN (SELECT item_id FROM share WHERE fg_name IN (SELECT fg_name FROM belong WHERE email = ?)) ORDER BY post_time DESC";
 
 	//prepare select statement, and retrieve all info about content. Make sure you belong to these fgs
 	if ($statement = $connection->prepare($query)) {

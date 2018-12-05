@@ -20,7 +20,6 @@ echo $_SESSION["fname"] . ' ' . $_SESSION["lname"];
 <body>
 	<ul>
 		<li><a href= "main.php">Homepage</a></li>
-		<li><a href="friendgroup.php">Manage Groups</a></li>
 	</ul>
 	<h1>Select Post Options</h1>
 	<br>
@@ -59,7 +58,7 @@ echo $_SESSION["fname"] . ' ' . $_SESSION["lname"];
                 <input type="text" name="file_path">
         </div>
         <input type = 'checkbox' id='checkbox' name = 'public' value = 'public' checked='checked'><label for='public'>Public</label>
-        
+
         
 		<input type="submit" value="Submit" />
 	</form>

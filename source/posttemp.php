@@ -24,7 +24,6 @@ if (isset($_POST['options']) && is_array($_POST['options'])) {
 else {
 	echo "error with checkboxes";
 }
-
 //check if public
 if (isset($_POST['public'])) {
 	$ispublic = 1;
@@ -38,12 +37,18 @@ if (isset($_POST['file_path'])) {
 	$file_path = $_POST['file_path'];
 }
 
-
-//Form handling
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-	//function to add
-	$return = postContentItem($_SESSION['email'], $timestamp, $file_path, $item_name, $ispublic, $connection, $groups);
+//make sure groups are selected if not public
+if (!isset($_POST['options']) && !isset($_POST['public'])) {
+	$return = "You need to select groups if you want to make a private post.";
 }
+else {
+	//Form handling
+	if ($_SERVER["REQUEST_METHOD"] == "POST") {
+		//function to add
+		$return = postContentItem($_SESSION['email'], $timestamp, $file_path, $item_name, $ispublic, $connection, $groups);
+	}
+}
+
 
 
 

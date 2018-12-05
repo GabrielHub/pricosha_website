@@ -254,12 +254,6 @@ function createFriendGroupTable($owner_email, $connection) {
 	echo "<td>" . $v['fg_name'] . "</td>";
 	echo "<td>" . $v['description'] . "</td>";
 	echo "<td><a href=\"addfriendtempsession.php?fgname=" . $v['fg_name'] . "\" class=\"btn btn-primary\">ADD</a></td>";
-	/*echo "<td><form enctype=\"multipart/formdata\" class= \"btn btn-primary \" action=\"addfriend1.php\" method=\"post\">
-	<input type=\"hidden\" name=\"fgname\"
-	value=\"" . $v['fg_name'] . "\">
-	<input type=\"submit\" name=\"whatever\" value=\"ADD\" id=\"hyperlink-style-button\"/>
-	</form></td>
-	";*/
 	echo "</tr>";
 	}
 	echo "</table>";
@@ -280,7 +274,7 @@ function getContentItemData($email, $connection) {
 	//query gets all public and friend group posts, and orders them by time posted
 	$query = "SELECT item_id, email_post, post_time, item_name, file_path FROM contentitem WHERE is_pub = 1 
 UNION
-SELECT item_id, email_post, post_time, item_name, file_path FROM ContentItem WHERE item_id IN (SELECT item_id FROM share WHERE fg_name IN (SELECT fg_name FROM belong WHERE email = ?)) ORDER BY post_time DESC";
+	SELECT item_id, email_post, post_time, item_name, file_path FROM ContentItem WHERE item_id IN (SELECT item_id FROM share WHERE fg_name IN (SELECT fg_name FROM belong WHERE email = ?)) ORDER BY post_time DESC";
 
 	//prepare select statement, and retrieve all info about content. Make sure you belong to these fgs
 	if ($statement = $connection->prepare($query)) {

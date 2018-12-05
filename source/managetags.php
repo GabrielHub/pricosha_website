@@ -1,4 +1,4 @@
-<?php //How to check if logged in
+<?php 
 //init session
 session_start();
 
@@ -7,6 +7,8 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     header("location: login.php");
     exit;
 }
+
+echo $_SESSION["fname"] . ' ' . $_SESSION["lname"];
 ?>
 <html>
 	<head>
@@ -17,23 +19,13 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 <body>
 	<ul>
 		<li><a class="active" href= "main.php">Homepage</a></li>
-		<li><a href="friendgroup.php">Manage Groups</a></li>
-		<li><a href="managetags.php">Manage Tags</a></li>
-		<li><a href="post.php">Post</a></li>
 	</ul>
-	<?php echo "<h1>" . $_SESSION["fname"] . ' ' . $_SESSION["lname"] . "'s Feed</h1>" ?>
-	
+
+	<h1>Manage Tags</h1>
 
 	<div class = "columns">
-		<p>Features:</p>
-		<p>Click on <b>Manage Groups</b> for adding Friends other Group management!</p>
-		<p>Click on <b>Post</b> to post something!</p> 
-		<p>Click on <b>Manage Tags</b> to remove or accept or view tags!</p><br>
-		<br>
-
-		<p> Click on <b>Tag</b> on any post to tag someone! </p> <br>
-
-		<h2>Feed:</h2>
+		<h2>Pending Tags</h2>
+		<p>Someone has tagged you in a post!</p>
 		<br>
 
 		<?php
@@ -51,7 +43,6 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 			//go through each visible post and display details, also add a tag button
 			foreach ($posts as $v) {
 				echo "<div class = 'column'><h2>" . $v['item_name'] . "</h2><p>" . $v['file_path'] . " </p> <h3>" . $v['item_id'] . ".  <b>" . $v['email_post'] . "</b> , " . $v['post_time'] . "</h3>
-				<p><a href='tagtemp.php?id=" . $v['item_id'] . "' class='btn btn-primary'>TAG</a></p>
 				</div>";
 			}
 		}
@@ -61,9 +52,5 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 	</div>
 
 	</div>
-	<p>
-		<br><br>
-		<a href="logout.php" class="button" id="logout_button">Sign Out</a>
-	</p>
 </body>
 </html>

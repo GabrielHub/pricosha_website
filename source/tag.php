@@ -65,6 +65,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		$statement->close();
 	}
 
+	//check if email is already tagged in item
+	$query = "SELECT item_id FROM tag WHERE email_tagged = ? AND item_id = ?";
+
+	//prepare statement
+	if ($statement = $connection->prepare($query)) {
+		//bind variables
+		$statement->bind_param("si", $param_tagged, $param_id);
+
+		//set parameters
+		$param_tagged = trim($_POST['email']);
+		$param_id = $_SESSION['tag_item_id'];
+
+		//attempt execution
+		if ($statement->execute()) {
+			$statement->store_result();
+
+			//check for empty set
+			if ($statement->num_rows == 1) {
+				$email_err = "This person has already been tagged in this group, or a tag has already been proposed to them.";
+			}
+		}
+		else {
+			$email_err = "Could not check if user has already been tagged in this group";
+		}
+	}
+	$statement->close();
+
 	//check input errors before db insertion
 	if (empty($email_err)) {
 		//prepare insert statement

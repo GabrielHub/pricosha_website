@@ -21,10 +21,11 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 		<li><a href="managetags.php">Manage Tags</a></li>
 		<li><a href="post.php">Post</a></li>
 	</ul>
-	<?php echo "<h1>" . $_SESSION["fname"] . ' ' . $_SESSION["lname"] . "'s Feed</h1>" ?>
+	<?php echo "<h1>" . $_SESSION["fname"] . ' ' . $_SESSION["lname"] . "</h1>" ?>
 	
 
 	<div class = "columns">
+		<a href="https://github.com/GabrielHub/pricosha_website"><p> A Project By Gabriel Ong </p></a>
 		<p>Features:</p>
 		<p>Click on <b>Manage Groups</b> for adding Friends other Group management!</p>
 		<p>Click on <b>Post</b> to post something!</p> 

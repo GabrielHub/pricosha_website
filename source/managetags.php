@@ -24,26 +24,26 @@ echo $_SESSION["fname"] . ' ' . $_SESSION["lname"];
 	<h1>Manage Tags</h1>
 
 	<div class = "columns">
-		<h2>Pending Tags</h2>
-		<p>Someone has tagged you in a post!</p>
+		<h2>Pending Tags: </h2>
+		<p>Decline, Accept or ignore the pending tag.</p>
 		<br>
 
 		<?php
 		include "functions.php";
 		$connection = connect();
 
-		//display shared content items and info about them
-		$posts = getContentItemData($_SESSION['email'], $connection); //store results in an array to use
+		//get an array of pending tags
+		$pending = getPendingTags($_SESSION['email'], $connection); 
 
 		//if empty
-		if (empty($posts)) {
-			echo "No posts yet!";
+		if (empty($pending)) {
+			echo "No pending tags!";
 		} 
 		else {
-			//go through each visible post and display details, also add a tag button
-			foreach ($posts as $v) {
-				echo "<div class = 'column'><h2>" . $v['item_name'] . "</h2><p>" . $v['file_path'] . " </p> <h3>" . $v['item_id'] . ".  <b>" . $v['email_post'] . "</b> , " . $v['post_time'] . "</h3>
-				</div>";
+			//display each pending tag
+			foreach ($pending as $v) {
+				$tagger_name = getName($v['email_tagger'], $connection);
+				echo "<div class = 'column'><h2>" . $tagger_name . " has tagged you</h2><p>in item " . $v['item_id'] . " </p> <h3>" . $v['tagtime'] . "</h3> <p><a href='tagacceptdecline.php?id=" . urlencode($v['item_id']) . "&email_tagger=" . urlencode($v['email_tagger']) . "&response=" . urlencode("accept") . "'class='btn btn-primary'>Accept</a>  <a href='tagacceptdecline.php?id=" . urlencode($v['item_id']) . "&email_tagger=" . urlencode($v['email_tagger']) . "&response=" . urlencode("decline") . "'class='btn btn-primary'>Decline</a></p></div>";
 			}
 		}
 

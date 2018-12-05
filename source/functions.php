@@ -272,9 +272,7 @@ function getContentItemData($email, $connection) {
 	$result = array();
 
 	//query gets all public and friend group posts, and orders them by time posted
-	$query = "SELECT item_id, email_post, post_time, item_name, file_path FROM contentitem WHERE is_pub = 1 
-UNION
-	SELECT item_id, email_post, post_time, item_name, file_path FROM ContentItem WHERE item_id IN (SELECT item_id FROM share WHERE fg_name IN (SELECT fg_name FROM belong WHERE email = ?)) ORDER BY post_time DESC";
+	$query = "SELECT item_id, email_post, post_time, item_name, file_path FROM contentitem WHERE is_pub = 1 UNION SELECT item_id, email_post, post_time, item_name, file_path FROM contentitem WHERE item_id IN (SELECT item_id FROM share WHERE fg_name IN (SELECT fg_name FROM belong WHERE email = ?)) ORDER BY post_time DESC";
 
 	//prepare select statement, and retrieve all info about content. Make sure you belong to these fgs
 	if ($statement = $connection->prepare($query)) {
@@ -310,6 +308,149 @@ UNION
 	$statement->close();
 
 	return $result;
+}
+
+function getName($email, $connection) {
+	//variables to bind to
+	$fname;
+	$lname;
+
+	$result;
+
+	//query gets first name and last in person
+	$query = "SELECT fname, lname FROM person WHERE email = ?";
+
+	//prepare select statement
+	if ($statement = $connection->prepare($query)) {
+		//bind variables to prepared statement
+		$statement->bind_param("s", $param_email);
+
+		//set email
+		$param_email = $email;
+
+		//attempt execution
+		if ($statement->execute()) {
+			//store result
+			$statement->store_result();
+			$statement->bind_result($fname, $lname);
+			if ($statement->fetch()) {
+				$result = $fname . " " . $lname;
+			} 
+			else {
+				return "Could not FETCH results from query";
+			}
+		}
+		else {
+			return "Could not retieve name from email";
+		}
+	}
+	$statement->close();
+
+	return $result;
+}
+
+function getPendingTags($email_tagged, $connection) {
+	//variables to bind to
+	$item_id;
+	$tagtime;
+	$email_tagger;
+
+	//Result array
+	$result = array();
+
+	//query gets all tagged posts with status = false
+	$query = "SELECT email_tagger, item_id, tagtime FROM tag WHERE email_tagged = ? AND status = 'false'";
+
+	//prepare select statement, and retrieve info about tag
+	if ($statement = $connection->prepare($query)) {
+		//bind variables to prepared state
+		$statement->bind_param("s", $param_email);
+
+		//set tagged Email
+		$param_email = $email_tagged;
+
+		//attempt an execution ;(
+		if ($statement->execute()) {
+			//store result
+			$statement->store_result();
+
+			//only add to array if there are rows
+			if ($statement->num_rows > 0) {
+				//bind results
+				$statement->bind_result($email_tagger, $item_id, $tagtime);
+
+				//add results to an array
+				while ($statement->fetch()) {
+				$result[] = array(
+					"email_tagger" => $email_tagger,
+					"item_id" => $item_id,
+					"tagtime" => $tagtime
+					);
+				}	
+			}
+		}
+		else {
+			echo "Could not fetch pending tags items.";
+		}
+	}
+	$statement->close();
+
+	return $result;
+}
+
+function manageTag($email_tagged, $email_tagger, $item_id, $response, $connection) {
+	//check if you're updating the tag or deleting it
+	if ($response === "accept") {
+		//update tag to change status to true
+		$query = "UPDATE tag SET status = 'true' WHERE email_tagged = ? AND email_tagger = ? AND item_id = ?";
+
+		//prepare statement to update pending tag
+		if ($statement = $connection->prepare($query)) {
+			//bind variables to statement
+			$statement->bind_param("ssi", $param_tagged, $param_tagger, $param_id);
+
+			//set parameters
+			$param_tagged = $email_tagged;
+			$param_tagger = $email_tagger;
+			$param_id = $item_id;
+
+			//attempt execution of prep statement
+			if ($statement->execute()) {
+				echo "accepted and updated!";
+				header("location: managetags.php");
+			}
+			else {
+				echo "Could not update";
+			}
+		}
+	}
+	else if ($response === "decline") {
+		//delete pending tag when it has been declined
+		$query = "DELETE FROM tag WHERE email_tagged = ? AND email_tagger = ? AND item_id = ?";
+
+		//prepare statement to delete
+		if ($statement = $connection->prepare($query)) {
+			//bind variables to statement
+			$statement->bind_param("ssi", $param_tagged, $param_tagger, $param_id);
+
+			//set parameters
+			$param_tagged = $email_tagged;
+			$param_tagger = $email_tagger;
+			$param_id = $item_id;
+
+			//attempt execution of prep statement
+			if ($statement->execute()) {
+				echo "deleted and updated!";
+				header("location: managetags.php");
+			}
+			else {
+				echo "Could not update";
+			}
+		}
+	}
+	else {
+		echo "Response button broke boi.";
+	}
 }
 
 /* old test code, learning basic prepared statements and insertions

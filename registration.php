@@ -93,7 +93,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //Check input errors before db insertion
     if (empty($username_err) && empty($password_err) && empty($confirm_password_err) && empty($fname_err) && empty($lname_err)) {
     	//prepare insert statement
-    	$query = "INSERT INTO Person VALUES (?, ?, ?, ?)";
+    	$query = "INSERT INTO person VALUES (?, ?, ?, ?)";
 
     	if ($statement = $connection->prepare($query)) {
     		//bind variables to the prepared statement as parameters
@@ -115,7 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     		}
     	}
         else {
-            echo "Could not create account!";
+            die('prepare() failed: ' . htmlspecialchars($connection->error));
         }
     	//Close statement
     	$statement->close();

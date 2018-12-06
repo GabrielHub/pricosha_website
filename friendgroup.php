@@ -27,11 +27,7 @@ echo $_SESSION["fname"] . ' ' . $_SESSION["lname"];
 	<h1>Friend Groups</h1>
 
 	<div class = "columns">
-		<p>
-			Click <b>Create New Group</b> to create a new Group! <br>
-			Click <b>Friends</b> to add friends to groups! <br>
-		</p>
-		<p>FriendGroups you Own:</p>
+		<h2>FriendGroups you Own:</h2>
 
 		<?php
 		include("functions.php");
@@ -40,13 +36,29 @@ echo $_SESSION["fname"] . ' ' . $_SESSION["lname"];
 		//Find friendgroups you own and display them as links to their content pages
 		$friendgroups = getOwnedFriendGroup($_SESSION["email"], $connection);
 		if (empty($friendgroups)) {
-			echo "You own no friendgroups!";
+			echo "You own no friend groups!";
 		}
 
 		//Loop through associative array, and print only the fgnames
 		foreach($friendgroups as $v) {
 			echo $v['fg_name'], "<br>"; 
 		}
+
+		echo "<br><h2>All the friend groups you are in: </h2> <br>";
+
+		//Find friendgroups you are in
+		$fgs = getFriendGroup($_SESSION["email"], $connection);
+
+		if (empty($fgs)) {
+			echo "You aren't in any friend groups!";
+		}
+
+		//Loop through associative array, and print
+		foreach($fgs as $v) {
+			$description = getDescription($v['owner_email'], $v['fg_name'], $connection);
+			echo "<b>" . $v['fg_name'] . "</b>" . ", owned by: " . $v['owner_email'] . "<br><p>DESCRIPTION: " . $description . "</p><br><br>"; 
+		}
+
 
 		$connection->close();
 		?>

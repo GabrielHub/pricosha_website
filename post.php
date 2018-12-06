@@ -1,4 +1,4 @@
-<?php //How to check if logged in
+<?php
 //init session
 session_start();
 
@@ -55,7 +55,7 @@ echo $_SESSION["fname"] . ' ' . $_SESSION["lname"];
         </div>
         <div>
                 <label>Text</label><br>
-                <input type="text" name="file_path">
+                <input type="textbox" name="file_path">
         </div>
         <!--<input type = 'checkbox' id='checkbox' name = 'public' value = 'public' checked='checked'><label for='public'>Public</label>-->
 
@@ -64,7 +64,7 @@ echo $_SESSION["fname"] . ' ' . $_SESSION["lname"];
  			<span class="checkmark"></span>
         </label>
         
-		<input type="submit" value="Submit" />
+		<input type="submit" style="width: 50%" class="btn btn-primary" value="Submit" />
 	</form>
 
 	</div>

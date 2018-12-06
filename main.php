@@ -18,6 +18,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 	<ul>
 		<li><a class="active" href= "main.php">Homepage</a></li>
 		<li><a href="createfriendgroup.php">Create Group</a></li>
+		<li><a href="friendgroup.php">View Groups</a></li>
 		<li><a href="addfriend.php">Add Friend</a></li>
 		<li><a href="managetags.php">Manage Tags</a></li>
 		<li><a href="post.php">Post</a></li>
@@ -32,6 +33,8 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 		<p>Click on <b>Manage Groups</b> for adding Friends other Group management!</p>
 		<p>Click on <b>Post</b> to post something!</p> 
 		<p>Click on <b>Manage Tags</b> to remove or accept tags!</p><br>
+		Click <b>Create New Group</b> to create a new Group! <br>
+		Click <b>Friends</b> to add friends to groups! <br>
 		<br>
 
 		<p> Click on <b>Tag</b> on any post to tag someone! </p> <br>

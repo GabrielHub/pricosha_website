@@ -58,6 +58,36 @@ function getFriendGroup($email, $connection){
 	return $result;
 }
 
+//getting descriptions of friendgroups
+function getDescription($owner_email, $fg_name, $connection) {
+	$result = "";
+	$description; //Var to store temp results
+
+	//prepare statement
+	if ($statement = $connection->prepare("SELECT description FROM friendgroup WHERE owner_email = ? AND fg_name = ?")) {
+		//bind param
+		$statement->bind_param("ss", $param_email, $param_fg);
+
+		//set parameter values
+		$param_email = $owner_email;
+		$param_fg = $fg_name;
+
+		if ($statement->execute()) {
+			$statement->store_result();
+			$statement->bind_result($description);
+			if ($statement->fetch()) {
+				$result = $description;
+			}
+		}
+		else {
+			$result = "Couldn't fetch descriptions";
+		}
+	}
+	$statement->close();
+
+	return $result;
+}
+
 //For getting friendgroups you own
 function getOwnedFriendGroup($email, $connection) {
 	$array = array();
@@ -266,6 +296,57 @@ function createFriendGroupTable($owner_email, $connection) {
 	echo "</table>";
 }
 
+//retrive content items for a guest user
+function getGuestContentItemData($connection) {
+	//variables to bind to
+	$item_id;
+	$email_post;
+	$post_time;
+	$item_name;
+	$file_path;
+
+	//result array
+	$result = array();
+
+	//query gets only public content from the last 24 hours
+	$query = "SELECT item_id, email_post, post_time, item_name, file_path FROM contentitem WHERE (is_pub = ? AND (post_time >= NOW() - INTERVAL 1 DAY)) ORDER BY post_time DESC";
+
+	//prepare select statement, and retrieve all info about content
+	if ($statement = $connection->prepare($query)) {
+		//bind variables to prep
+		$statement->bind_param("i", $param_public);
+
+		//set public paramter. I want this to be a prepared statement, but public will always be 1 here
+		$param_public = 1;
+
+		//attempt execution 
+		if ($statement->execute()) {
+			//store result
+			$statement->store_result();
+
+			//bind results
+			$statement->bind_result($item_id, $email_post, $post_time, $item_name, $file_path);
+
+			//add results to an array
+			while ($statement->fetch()) {
+			$result[] = array(
+				"item_id" => $item_id,
+				"email_post" => $email_post,
+				"post_time" => $post_time,
+				"item_name" => $item_name,
+				"file_path" => $file_path
+				);
+			}
+		}
+		else {
+			echo "could not execute query";
+		}
+	}
+	$statement->close();
+
+	return $result;
+}
+
 //retrieve all content items with permission to view and store in an associative array
 function getContentItemData($email, $connection) {
 	//variables to bind to
@@ -279,7 +360,7 @@ function getContentItemData($email, $connection) {
 	$result = array();
 
 	//query gets all public and friend group posts, and orders them by time posted
-	$query = "SELECT item_id, email_post, post_time, item_name, file_path FROM contentitem WHERE (is_pub = 1 AND (post_time >= NOW() - INTERVAL 1 DAY)) UNION SELECT item_id, email_post, post_time, item_name, file_path FROM contentitem WHERE (post_time >= NOW() - INTERVAL 1 DAY) AND item_id IN (SELECT item_id FROM share WHERE fg_name IN (SELECT fg_name FROM belong WHERE email = ?)) ORDER BY post_time DESC";
+	$query = "SELECT item_id, email_post, post_time, item_name, file_path FROM contentitem WHERE is_pub = 1 UNION SELECT item_id, email_post, post_time, item_name, file_path FROM contentitem WHERE item_id IN (SELECT item_id FROM share WHERE fg_name IN (SELECT fg_name FROM belong WHERE email = ?)) ORDER BY post_time DESC";
 
 	//prepare select statement, and retrieve all info about content. Make sure you belong to these fgs
 	if ($statement = $connection->prepare($query)) {
@@ -598,107 +679,49 @@ function tagContentInfo($item_id, $connection) {
 
 }
 
-/* old test code, learning basic prepared statements and insertions
-function db_insert() {
-	$connection = connect();
-	//Query and check if these have been initialized already
-	$query = "SELECT email FROM person WHERE email='AA@nyu.edu'";
-	$result = $connection->query($query);
-	if ($result->num_rows > 0) {
-		$connection->close();
-		return false;
+function getAllUsers($self_email, $connection) {
+	//variables to bind to
+	$email;
+	$fname;
+	$lname;
+
+	//result array
+	$result = array();
+
+	//query gets only public content from the last 24 hours
+	$query = "SELECT email, fname, lname FROM person WHERE email NOT IN (SELECT email FROM person WHERE email = ?) ORDER BY fname ASC";
+
+	//prepare select statement, and retrieve all person info except for self
+	if ($statement = $connection->prepare($query)) {
+		//bind variables to prep
+		$statement->bind_param("s", $param_email);
+
+		//set email param
+		$param_email = $self_email;
+
+		//attempt execution 
+		if ($statement->execute()) {
+			//store result
+			$statement->store_result();
+
+			//bind results
+			$statement->bind_result($email, $fname, $lname);
+
+			//add results to an array
+			while ($statement->fetch()) {
+			$result[] = array(
+				"email" => $email,
+				"fname" => $fname,
+				"lname" => $lname
+				);
+			}
+		}
+		else {
+			echo "could not execute get people query";
+		}
 	}
-	else {
-		$statement = $connection->prepare("INSERT INTO Person VALUES (?, ?, ?, ?)");
-		$statement->bind_param("ssss", $email, $password, $fname, $lname);
+	$statement->close();
 
-		//test insertions
-		$email = "AA@nyu.edu";
-		$password = "password";
-		$fname = "Albert";
-		$lname = "Ainstein";
-		$statement->execute();
-
-		$email = "BB@nyu.edu";
-		$password = "password";
-		$fname = "Busta";
-		$lname = "Bhymes";
-		$statement->execute();
-
-		$email = "CC@nyu.edu";
-		$password = "password";
-		$fname = "Calamari";
-		$lname = "Calamity";
-		$statement->execute();
-
-		$email = "DD@nyu.edu";
-		$password = "password";
-		$fname = "Donald";
-		$lname = "Dump";
-		$statement->execute();
-
-		$email = "EE@nyu.edu";
-		$password = "password";
-		$fname = "EastAsian";
-		$lname = "Espionage";
-		$statement->execute();
-
-		$email = "FF@nyu.edu";
-		$password = "password";
-		$fname = "Forest";
-		$lname = "Florist";
-		$statement->execute();
-
-		$email = "GG@nyu.edu";
-		$password = "password";
-		$fname = "Guppy";
-		$lname = "Gupta";
-		$statement->execute();
-
-		$statement->close();
-		$connection->close();
-		return true;
-	}
+	return $result;
 }
-
-function db_delete() {
-	$connection = connect();
-	//Query and check if these have been initialized already
-	$query = "SELECT email FROM person WHERE email='AA@nyu.edu'";
-	$result = $connection->query($query);
-	if ($result->num_rows <= 0) {
-		$connection->close();
-		return false;
-	}
-	else {
-		$statement = $connection->prepare("DELETE FROM Person WHERE email = ?");
-		$statement->bind_param("s", $email);
-
-		//test insertions
-		$email = "AA@nyu.edu";
-		$statement->execute();
-
-		$email = "BB@nyu.edu";
-		$statement->execute();
-
-		$email = "CC@nyu.edu";
-		$statement->execute();
-
-		$email = "DD@nyu.edu";
-		$statement->execute();
-
-		$email = "EE@nyu.edu";
-		$statement->execute();
-
-		$email = "FF@nyu.edu";
-		$statement->execute();
-
-		$email = "GG@nyu.edu";
-		$statement->execute();
-
-		$statement->close();
-		$connection->close();
-		return true;
-	}
-}*/
 ?>

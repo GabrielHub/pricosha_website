@@ -127,7 +127,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <span class="help-block"><?php echo $lname_err; ?></span>
             </div>
             <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Submit">
+                <input type="submit" style="width:22%" class="btn btn-primary" value="Submit">
             </div>
             <p>Return to home page <a href="addfriend.php">Back</a>.</p>
         </form>

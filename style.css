@@ -1,7 +1,33 @@
 <style>
 
 
-/* CSS created specifically for this project @import url(//codepen.io/chrisdothtml/pen/ojLzJK.css);*/
+/* CSS created specifically for this project */
+
+input[type=text]:focus {
+  outline: none;
+  border: 3px solid #555;
+  background-color: lightblue;
+} 
+
+input[type=text] {
+  width: 22%;
+}
+
+input[type=password] {
+  width: 10%;
+}
+
+input[type=textbox] {
+  width: 50%;
+  height: 150px;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  resize: none;
+}
+
 .form-group {
   margin-bottom: 15px;
 }

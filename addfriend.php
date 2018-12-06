@@ -22,6 +22,7 @@ echo $_SESSION["fname"] . ' ' . $_SESSION["lname"];
 		<li><a class="active" href= "main.php">Homepage</a></li>
 		<li><a href="friendgroup.php">Manage Groups</a></li>
 		<li><a href="createfriendgroup.php">Create New Group</a></li>
+		<li style = "float:right"><a href="logout.php" class='btn btn-primary'>Sign Out</a></li>
 	</ul>
 
 	<h1>Add Friends</h1>
@@ -42,12 +43,29 @@ echo $_SESSION["fname"] . ' ' . $_SESSION["lname"];
 		createFriendGroupTable($owner_email, $connection);
 	}
 
+	echo "<br><h1>Users:</h1><p>List of users</p><br>";
+
+	//get an array of all users except yourself
+	$users = getAllUsers($_SESSION['email'], $connection);
+
+	echo "
+	<table>
+	<tr>
+	<th>Email</th>
+	<th>Name</th>
+	</tr>";
+
+	foreach ($users as $v) {
+	echo "<tr>";
+	echo "<td>" . $v['email'] . "</td>";
+	echo "<td>" . $v['fname'] . " " . $v['lname'] . "</td>";
+	echo "</tr>";
+	}
+	echo "</table>";
+
+
 	$connection->close();
 	?> 
-
-	<p>
-		<br><br>
-		<a href="logout.php" class="button" id="logout_button">Sign Out</a>
-	</p>
+	
 </body>
 </html>

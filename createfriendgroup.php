@@ -120,12 +120,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
             <div class="form-group <?php echo (!empty($fgname_err)) ? 'has-error' : ''; ?>">
                 <label>Friend Group Name</label>
-                <input type="text" name="fgname" class="form-control" value="<?php echo $fgname; ?>">
+                <input type="txt" name="fgname" class="form-control" value="<?php echo $fgname; ?>">
                 <span class="help-block"><?php echo $fgname_err; ?></span>
             </div>    
             <div class="form-group <?php echo (!empty($description_err)) ? 'has-error' : ''; ?>">
-                <label>Description</label>
-                <input type="text" name="description" class="form-control" value="<?php echo $description; ?>">
+                <label>Description</label><br>
+                <input type="textbox" name="description" class="form-control" value="<?php echo $description; ?>">
                 <span class="help-block"><?php echo $description_err; ?></span>
             </div>
             <div class="form-group">

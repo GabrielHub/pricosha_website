@@ -83,26 +83,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     $connection->close();
 }
-
-//OLD CODE
-/*$email = trim($_POST['uname']);
-$pass = trim($_POST['psw']);
-
-//get query
-$query = "SELECT email, password FROM person WHERE email='$email' and password='$pass'";
-
-//If check
-$result = $connection->query($query);
-
-if ($result->num_rows <= 0) {
-	die("Error logging in, email or password does not match");
-}
-else {
-	saveEmail($email);
-	session_start();
-	$_SESSION[$this->GetLoginSessionVar()] = $email;
-	echo "<script>window.location.href = 'main.php';</script>";
-}*/
 ?>
 
 <!DOCTYPE html>
@@ -135,9 +115,10 @@ else {
                 <span class="help-block"><?php echo $password_err; ?></span>
             </div>
             <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Login">
+                <input type="submit" style="width: 20%" class="btn btn-primary" value="Login">
             </div>
-            <p>Don't have an account? <a href="index.php">Sign up now</a>.</p>
+            <p>Don't have an account? <a href="registration.php">Sign up now</a>.</p>
+            <p>Want to remain a guest? <a href="index.php">Back to homepage</a>.</p>
         </form>
 	</body>
 </html>

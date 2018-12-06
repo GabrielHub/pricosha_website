@@ -1,3 +1,5 @@
+WRITEUP:
+
 This is Gabriel Ong's course project for a PriCoSha.
 PriCoSha: A application using a system for privately sharing content items among groups of people. PriCoSha gives users somewhat more privacy than many content sharing sites by giving them more detailed control over who can see which content items they post and more control over whether other people can tag content items with a user's personal information.
 
@@ -7,7 +9,7 @@ This implementation has a focus on text posts and a title to each post. Not curr
 
 Use Cases and Features:
 1) View Public Content: The main page shows the user a feed of (item_id, email_post, post_time, file_path, and item_name) content items that are
-visible to them from the last 24 hours, arranged in chronological order. There is also a tag button for each post that leads to a page with extended content information, including the names of people who are tagged and who they are tagged by.
+visible to them from the last 24 hours, arranged in chronological order. There is also a tag button for each post that leads to a page with extended content information, including the names of people who are tagged and who they are tagged by. When logged in, all posts visible to the user are displayed no matter what time they were posted.
 
 2) Login: Login using existing credentials using a unique email and a hashed password. Initiates a session storing relevant session variables then goes to the home page. If the user/pass does not match or if they are empty, refuse login. The first page of the website is a registration page. Each page has a sign out button that returns you to the login page.
 
@@ -18,3 +20,5 @@ visible to them from the last 24 hours, arranged in chronological order. There i
 5) Create Friend Group: Users can create friend groups.
 
 6) Users can Post with updates, notices, and other text content to everyone, or privately to their friendgroups.
+
+Mockups of the site can be found in the Images folder, and the site can be found at tex.epizy.com
